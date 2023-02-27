@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "test": "testcafe chrome -c 1 first_test.js"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "prettier": "^2.8.4",
+    "testcafe": "^2.3.1"
+  }
+}
