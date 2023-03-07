@@ -1,55 +1,50 @@
-import { Selector } from 'testcafe'
-import { faker } from '@faker-js/faker';
-fixture`Getting Started`
-    .page`https://www.demoblaze.com/`
+import { Selector } from "testcafe";
+import { faker } from "@faker-js/faker";
+import SignUpPage from "./Elements/signup";
+import LoginPage from "./Elements/login";
+import ContactPage from "./Elements/contact";
+import AboutPage from "./Elements/about";
+import AddToCartPage from "./Elements/addtoCart";
+fixture`Getting Started`.page`https://www.demoblaze.com/`;
 
+const name = faker.name.fullName();
+const pass = faker.internet.password();
 
-test('Valid Signup test', async t => {
-    await t.click("#signin2");
-    await t.typeText("#sign-username", faker.name.fullName());
-    await t.typeText("#sign-password", faker.internet.password());
-    //await t.click(Selector("button").withText("Sign up"));
-    await t
-        .setNativeDialogHandler(() => true)
-        .click(Selector("button")
-            .withText("Sign up"));
-    //await t.debug();
+test("Valid Signup test", async (t) => {
+  const signUpPage = new SignUpPage();
+  await signUpPage.signUp(name, pass);
 });
 
-test('Valid Login test', async t => {
-    await t.click("#login2");
-    await t.typeText("#loginusername", "Jamil Rayhan");
-    await t.typeText("#loginpassword", "Jamil");
-    await t
-        .setNativeDialogHandler(() => true)
-        .click(Selector("button").withText("Log in"));
-    await t.click("#nameofuser");
-
-    //await t.debug();
+test("Valid Login test", async (t) => {
+    const loginPage = new LoginPage();
+    await loginPage.login(name, pass);
 });
-test('Contact test', async t => {
-    await t
-        .click(Selector("a").withText("Contact"));
-    await t.typeText("#recipient-email", "abc@gmail.com");
-    await t.typeText("#recipient-name", "Rahim");
-    await t.typeText("#message-text", "Hi I am Rahim");
-    await t.setNativeDialogHandler(() => true).click(Selector("button").withText("Send message"));
-
-    //await t.debug();
+test("Contact test", async (t) => {
+    const contactPage = new ContactPage();
+    
+    const email = faker.internet.email();
+    const name = faker.name.fullName();
+    const message = faker.lorem.sentence();
+  
+    await t.click(Selector("a").withText("Contact"));
+    await contactPage.fillRecipientEmail(email);
+    await contactPage.fillRecipientName(name);
+    await contactPage.fillMessage(message);
+    await contactPage.sendMessage();
 });
-test('About test', async t => {
-    await t.click(Selector("a").withText("About us"));
-    await t.setNativeDialogHandler(() => true).click(Selector("button").withText("Play Video"));
-
-    //await t.debug();
+test("About test", async (t) => {
+    const aboutPage = new AboutPage();
+  
+    await aboutPage.goToAboutPage();
+    await aboutPage.playVideo();
 });
 
 test('Add item to cart', async t => {
-    const product = Selector('.card-title').nth(0);
+    const addToCartPage = new AddToCartPage();
+  
     await t.click(Selector("a").withText("Samsung galaxy s6"));
-    await t.setNativeDialogHandler(() => true).click(Selector("a").withText("Add to cart"));
-    await t.click(Selector('#cartur').withText("Cart"));
-    // const itemName = Selector('td').withText("Samsung galaxy s6");
-    // await t.expect(itemName.innerText).contains(product.innerText);
-    await t.debug();
+    await addToCartPage.addItemToCart();
+    await addToCartPage.navigateToCart();
+    await addToCartPage.verifyItemInCart('Samsung galaxy s6');
+    //await t.debug();
 });
