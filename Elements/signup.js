@@ -12,8 +12,6 @@ export default class SignUpPage {
     await t.click(this.signInButton);
     await t.typeText(this.usernameField, username);
     await t.typeText(this.passwordField, password);
-    await t
-      .setNativeDialogHandler(() => true)
-      .click(this.signUpButton);
+    await t.setNativeDialogHandler(() => true).click(this.signUpButton);
   }
 }
